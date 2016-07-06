@@ -1,0 +1,6 @@
+#!/bin/bash
+
+mkdir -p cppsp_cache
+cppsp_standalone -f -l 0.0.0.0:16969 -c -fPIC -c -pthread -c -Ofast -c -march=native -c -lcpoll -c -lcppsp -b ./cppsp_cache -r . "$@"
+
+

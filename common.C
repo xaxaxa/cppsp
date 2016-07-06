@@ -89,7 +89,7 @@ namespace cppsp
 		StreamWriter sw3(ms3);
 		sw1.write("#include <cppsp/page.H>\n#include <cpoll/cpoll.H>\n");
 		sw1.write("#include <cppsp/common.H>\n#include <cppsp/stringutils.H>\n");
-		sw1.write("#include <rgc.H>\n");
+		sw1.write("#include <cpoll/rgc.H>\n");
 		sw1.write("using namespace cppsp;\nusing namespace CP;\n");
 		int line = 1;
 		sw1.writeF("#line 1 \"%s\"\n", filename);

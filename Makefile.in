@@ -1,13 +1,37 @@
 CXX = @CXX@ @CXXFLAGS@ -Iinclude
 LDFLAGS = @LDFLAGS@ -Llib
 EXTRA_LIBRARIES = @EXTRA_LIBRARIES@
+
+INSTALL_BINDIR = @prefix@@bindir@
+INSTALL_LIBDIR = @prefix@@libdir@
+INSTALL_INCLUDEDIR = @prefix@@includedir@
+
 all: cppsp_standalone
 
-libcppsp.so: common.C page.C stringutils.C cppsp_cpoll.C @EXTRA_SOURCES@
-	$(CXX) $^ -o $@ $(LDFLAGS) $(EXTRA_LIBRARIES) --shared -lcpoll -lpthread -ldl
+LIBCPPSP_SOURCES = common.C page.C stringutils.C cppsp_cpoll.C @EXTRA_SOURCES@
+libcppsp.so: $(LIBCPPSP_SOURCES) cpoll/libcpoll.so
+	$(CXX) $(LIBCPPSP_SOURCES) -o $@ $(LDFLAGS) $(EXTRA_LIBRARIES) --shared -lcpoll -lpthread -ldl
 
 cppsp_standalone: cppsp_standalone.C libcppsp.so
 	$(CXX) cppsp_standalone.C -o $@ $(LDFLAGS) -lcpoll -lcppsp -lpthread
 
+# dependencies
+
+cpoll/libcpoll.so: cpoll/Makefile
+	$(MAKE) -C cpoll libcpoll.so
+
+cpoll/Makefile:
+	cd cpoll && autoreconf && ./configure --prefix @prefix@ --libdir @libdir@
+
+install: cppsp_standalone
+	$(MAKE) -C cpoll install
+	# headers
+	install -d $(INSTALL_INCLUDEDIR)/cppsp/
+	install -m 644 include/cppsp/* $(INSTALL_INCLUDEDIR)/cppsp/
+	# binaries
+	install libcppsp.so $(INSTALL_LIBDIR)/
+	install cppsp_standalone $(INSTALL_BINDIR)/
+
 clean:
 	rm -f *.so cppsp_standalone
+	$(MAKE) -C cpoll clean
