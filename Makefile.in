@@ -21,7 +21,7 @@ cpoll/libcpoll.so: cpoll/Makefile
 	$(MAKE) -C cpoll libcpoll.so
 
 cpoll/Makefile:
-	cd cpoll && autoreconf && ./configure --prefix @prefix@ --libdir @libdir@
+	cd cpoll && autoreconf && ./configure --prefix @prefix@ --bindir @bindir@ --libdir @libdir@ --includedir @includedir@
 
 install: cppsp_standalone
 	$(MAKE) -C cpoll install

@@ -4,5 +4,5 @@ examples/cppsp_cache/*
 config.log
 config.status
 configure
-*.so
+/*.so
 cppsp_standalone
