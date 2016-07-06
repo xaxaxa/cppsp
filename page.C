@@ -19,8 +19,8 @@
  *      Author: xaxaxa
  */
 
-#include "include/page.H"
-#include "include/common.H"
+#include <cppsp/page.H>
+#include <cppsp/common.H>
 #include <stdexcept>
 #include <stdlib.h>
 #include <math.h>

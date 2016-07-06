@@ -31,10 +31,10 @@
 #include <dlfcn.h>
 #include <libgen.h>
 #include <sys/wait.h>
-#include "include/common.H"
-#include "include/page.H"
+#include <cppsp/common.H>
+#include <cppsp/page.H>
 #include <errno.h>
-#include "include/split.H"
+#include <cppsp/split.H>
 #include <libgen.h>
 
 using namespace CP;

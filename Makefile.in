@@ -1,0 +1,13 @@
+CXX = @CXX@ @CXXFLAGS@ -Iinclude
+LDFLAGS = @LDFLAGS@ -Llib
+EXTRA_LIBRARIES = @EXTRA_LIBRARIES@
+all: cppsp_standalone
+
+libcppsp.so: common.C page.C stringutils.C cppsp_cpoll.C @EXTRA_SOURCES@
+	$(CXX) $^ -o $@ $(LDFLAGS) $(EXTRA_LIBRARIES) --shared -lcpoll -lpthread -ldl
+
+cppsp_standalone: cppsp_standalone.C libcppsp.so
+	$(CXX) cppsp_standalone.C -o $@ $(LDFLAGS) -lcpoll -lcppsp -lpthread
+
+clean:
+	rm -f *.so cppsp_standalone

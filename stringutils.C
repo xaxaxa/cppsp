@@ -19,8 +19,8 @@
  *      Author: xaxaxa
  */
 #include <cpoll/cpoll.H>
-#include "include/stringutils.H"
-#include "include/split.H"
+#include <cppsp/stringutils.H>
+#include <cppsp/split.H>
 #include <stdarg.h>
 using namespace CP;
 namespace cppsp

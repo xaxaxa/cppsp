@@ -21,7 +21,7 @@
 
 #ifndef PAGE_H_
 #define PAGE_H_
-#include <rgc.H>
+#include <cpoll/rgc.H>
 #include <map>
 #include <set>
 #include <cpoll/cpoll.H>

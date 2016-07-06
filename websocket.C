@@ -5,8 +5,8 @@
  *      Author: xaxaxa
  */
 
-#include "include/websocket.H"
-#include "include/page.H"
+#include <cppsp/websocket.H>
+#include <cppsp/page.H>
 #include <cryptopp/cryptlib.h>
 #include <cryptopp/sha.h>
 #include <cryptopp/filters.h>

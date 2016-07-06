@@ -18,10 +18,10 @@
  *  Created on: Mar 8, 2013
  *      Author: xaxaxa
  */
-#include "include/cppsp_cpoll.H"
+#include <cppsp/cppsp_cpoll.H>
 #include <stdio.h>
 #include <unistd.h>
-#include "include/stringutils.H"
+#include <cppsp/stringutils.H>
 using namespace CP;
 namespace cppsp
 {
