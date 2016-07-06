@@ -5,4 +5,3 @@ config.status
 configure
 *.so
 cppsp_standalone
-cpoll/
