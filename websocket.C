@@ -104,8 +104,7 @@ namespace cppsp
 		p.response->outputStream->write(p.response->buffer, cb);
 	}
 	bool ws_iswebsocket(const Request& req) {
-		return (ci_compare(req.headers["Connection"], "Upgrade") == 0
-				&& ci_compare(req.headers["Upgrade"], "websocket") == 0);
+		return (ci_compare(req.headers["Upgrade"], "websocket") == 0);
 	}
 }
 
