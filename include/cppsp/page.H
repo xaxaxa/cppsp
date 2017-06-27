@@ -721,13 +721,19 @@ namespace cppsp
 			doInit();
 		}
 		/**
-		 Each page goes through these stages (in order): init, [readPost], load, render, flush, finalize, [web server callback], ~Page
+		 Each page goes through these stages (in order): init, [readPost], load, render, flush, finalize, [web server callback], ~Page()
+		 
+		 Alternatively, you can override doInit() which will skip init(), readPost(), load(), and render(); you must call prepareResponse()
+		 from your doInit(), and afterwards you can start writing data to response. Then, you must call flush() to terminate this request.
 
-		 To be overridden by base class; called before load() is called, and must call initCB() or cancelLoad() after it's done
+		 To be overridden by derived class; called before load() is called, and must call initCB() or cancelLoad() after it's done
 		 */
 		virtual void init() {
 
 		}
+		/**
+		 See docs for init().
+		 */
 		virtual void doInit();
 		void prepareResponse() {
 			response->addDefaultHeaders(server->host->curRFCTime, server->defaultMime);

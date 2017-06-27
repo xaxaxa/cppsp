@@ -1,9 +1,52 @@
+/*
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 2 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * */
+
 #include <cpoll/cpoll.H>
 #include <cpoll/rgc.H>
 using namespace CP;
 using namespace RGC;
 namespace cppsp
 {
+	/**
+	  Usage:
+	  	WebSocketParser maintains an internal, dynamically sized buffer.
+	  	To begin reading websocket data from an arbitrary stream, call
+	  	beginPutData() to reserve space in the buffer, put your raw
+	  	received data in the buffer, and call endPutData() with the
+	  	number of bytes actually put. Then repeatedly call process()
+	  	until it returns false. Each time process() returns true, it
+	  	has parsed one websocket frame and put it in "out".
+	  
+	  Example:
+	  	WebSocketParser parser;
+	  
+	  	while(true) {
+	  		// allocate space in the buffer
+	  		String buf = parser.beginPutData(4096);
+	  		// read data into buffer
+	  		int bytesRead = (read some data into buf and return bytes read);
+	  		// inform parser of the new data
+	  		parser.endPutData(bytesRead);
+	  
+	  		// run the actual parser
+	  		WSFrame frame;
+	  		while(parser.process(&frame)) {
+	  			// do stuff with frame
+	  		}
+	  	}
+	 */
 	struct WebSocketParser
 	{
 		struct ws_header1
@@ -42,10 +85,17 @@ namespace cppsp
 
 		MemoryStream ms;
 		int pos = 0;
+		
+		/**
+		 reserve len bytes in the buffer
+		 */
 		String beginPutData(int len) {
 			if (ms.bufferSize - ms.bufferPos < len) ms.flushBuffer(len);
 			return {(char*)ms.buffer + ms.bufferPos,ms.bufferSize-ms.bufferPos};
 		}
+		/**
+		 inform the parser of the actual bytes received
+		 */
 		void endPutData(int len) {
 			ms.bufferPos += len;
 			ms.flush();
@@ -72,6 +122,10 @@ namespace cppsp
 				data.d[i] = data.d[i] ^ k[i % sizeof(key)];
 			}
 		}
+		/**
+		 read one frame from the buffer; returns whether a frame is
+		 read or not.
+		 */
 		bool process(WSFrame& out) {
 			char* data = (char*) ms.data() + pos;
 			int len = ms.length() - pos;
@@ -220,10 +274,26 @@ namespace cppsp
 			}
 		}
 	};
+	/**
+	 allocate space in the send buffer for len bytes of user data;
+	 returns the temporary buffer that you will put the data in.
+	 returned buffer will be exactly len bytes long.
+	 */
 	String ws_beginWriteFrame(FrameWriter& fw, int len);
+	/**
+	 send a websocket frame; buf MUST be the exact buffer that
+	 ws_beginWriteFrame returned earlier.
+	 */
 	void ws_endWriteFrame(FrameWriter& fw, String buf, int opcode);
 	struct Page;
 	struct Request;
+	/**
+	 perform the websocket handshake, and call cb when done
+	 */
 	void ws_init(Page& p, CP::Callback cb);
+	/**
+	 check http headers to see if the client is attempting to start
+	 a websocket connection
+	 */
 	bool ws_iswebsocket(const cppsp::Request& req);
 }
