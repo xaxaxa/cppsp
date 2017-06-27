@@ -19,7 +19,7 @@
 #include <sys/types.h>
 #include <stdexcept>
 #include <cppsp/common.H>
-#include <delegate.H>
+#include <cpoll/delegate.H>
 #include <dirent.h>
 
 int aaaaa=0;
