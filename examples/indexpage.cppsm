@@ -24,7 +24,15 @@ struct redirectHandler: public RGC::Object
 	Delegate<void()> cb;
 	void handleRequest(Request& req, Response& resp, Delegate<void()> cb) {
 		this->cb=cb;
-		resp.headers["Location"]=concat(*req.sp,req.path,"/");
+		resp.headersExtraSpace = req.path.length() + 50;
+		resp.addDefaultHeaders(server->host->curRFCTime, server->defaultMime);
+		
+		String header = concat(*req.sp, "Location: ",req.path,"/");
+		
+		string tmp = req.path.toSTDString();
+		
+		resp.headers.len += snprintf(resp.headers.data()+resp.headers.len, resp.headersExtraSpace, "Location: %s\r\n", tmp.c_str());
+		
 		resp.statusName="Moved permanently";
 		resp.statusCode=301;
 		resp.finalize({&redirectHandler::flushCB,this});
